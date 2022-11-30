@@ -6,10 +6,10 @@ export interface GameGridProps {
 }
 
 export enum CellColor {
-  RED = 'red',
+  // RED = 'red',
   BLUE = 'blue',
   GREEN = 'green',
-  PURPLE = 'purple',
+  // PURPLE = 'purple',
   ORANGE = 'orange',
   WHITE = 'white',
 }
@@ -21,9 +21,9 @@ export class GameGridCell {
 
   constructor() {
     // 80% chance to be a coloured cell
-    if (Math.random() <= 0.8) {
+    if (Math.random() <= 0.9) {
       // Be a random colour
-      const colors = Object.values(CellColor);
+      const colors = Object.values(CellColor).filter((color) => color !== CellColor.WHITE);
       const rnd = Math.floor(Math.random() * colors.length);
       this.color = colors[rnd];
     }
