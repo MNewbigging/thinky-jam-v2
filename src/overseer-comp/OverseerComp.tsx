@@ -12,15 +12,17 @@ export interface OverseerCompProps {
 export const OverseerComp: React.FC<OverseerCompProps> = observer(({ appState }) => {
   const seqCells: JSX.Element[] = [];
 
-  appState.overseerSequence.forEach((seqNo, idx) => {
+  appState.overseerSequence.forEach((color, idx) => {
     // Set css classes for each cell
     const actionClass = appState.takingOverseerMove === idx ? 'action' : '';
     const classes = ['sequence-grid-cell', actionClass];
 
     seqCells.push(
-      <div key={`seq-${idx}`} className={classes.join(' ')}>
-        {seqNo}
-      </div>
+      <div
+        key={`seq-${idx}`}
+        className={classes.join(' ')}
+        style={{ backgroundColor: color }}
+      ></div>
     );
   });
 

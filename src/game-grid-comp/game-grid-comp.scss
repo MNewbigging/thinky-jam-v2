@@ -8,14 +8,16 @@
     height: 40px;
     border-right: 1px solid black;
     border-top: 1px solid black;
-    transition: background-color 0.2s linear;
+    transition: all 0.2s linear;
+    opacity: 0.35;
 
-    &.cover {
-      background-color: rgb(223, 223, 223);
+    &.outOfBounds {
+      background-color: rgb(245, 137, 137) !important;
+      opacity: 1;
     }
 
     &.danger {
-      background-color: rgb(245, 137, 137);
+      opacity: 1;
     }
   }
 }

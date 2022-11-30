@@ -1,6 +1,6 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import { GameGrid, GridPosition } from './GameGrid';
+import { CellColor, GameGrid, GridPosition } from './GameGrid';
 import { KeyboardListener } from './KeyboardListener';
 
 export enum PlayerMove {
@@ -20,7 +20,7 @@ export enum GamePhase {
 export class AppState {
   grid: GameGrid | undefined = undefined;
   playerPosition = new GridPosition(0, 1);
-  overseerSequence: number[] = [];
+  overseerSequence: CellColor[] = [];
   playerMoves: PlayerMove[] = [];
   focusedMoveCell: number | undefined = undefined;
   gamePhase: GamePhase | undefined = undefined;
@@ -98,8 +98,10 @@ export class AppState {
     this.overseerSequence = [];
 
     for (let i = 0; i < 5; i++) {
-      const num = Math.floor(Math.random() * 5);
-      this.overseerSequence.push(num);
+      // Be a random colour
+      const colors = Object.values(CellColor);
+      const rnd = Math.floor(Math.random() * colors.length);
+      this.overseerSequence.push(colors[rnd]);
     }
   }
 
@@ -230,31 +232,35 @@ export class AppState {
   takeOverseerMove(moveIndex: number) {
     this.takingOverseerMove = moveIndex;
 
-    // Add the next sequence number to overseer's total
-    const nextAmount = this.overseerSequence[moveIndex];
-    this.overseerTotal += nextAmount;
+    // Activate the next tile
+    const dangerColor = this.overseerSequence[moveIndex];
 
-    // Is it over the turn-threshold?
-    if (this.overseerTotal >= this.turnThreshold) {
-      // Turn
-      this.overseerTurning = true;
-      this.overseerTotal = 0;
-
-      // Did the overseer see the player?
-      const playerCell = this.grid.getCellAtPosition(this.playerPosition);
-      if (!playerCell.cover) {
-        // Player was seen! Move back two spaces
-        this.playerPosition.x -= this.knockbackSpaces;
-
-        // Ensure this doesn't knock player off grid
-        if (this.playerPosition.x < 0) {
-          this.playerPosition.x = 0;
+    // Activate all cells of that color
+    this.grid.cells.forEach((row) =>
+      row.forEach((cell) => {
+        if (cell.color === dangerColor) {
+          // Now dangerous
+          cell.danger = true;
+          // Stop being dangerous after delay
+          setTimeout(() => (cell.danger = false), 500);
         }
+      })
+    );
 
-        // Did this knock the player back into a danger cell?
-        if (this.isPlayerOnDangerCell()) {
-          this.gameOver();
-        }
+    // Is the player on a danger cell now?
+    const playerCell = this.grid.getCellAtPosition(this.playerPosition);
+    if (playerCell.color === dangerColor) {
+      // Knock back the player
+      this.playerPosition.x -= this.knockbackSpaces;
+
+      // Ensure this doesn't knock player off grid
+      if (this.playerPosition.x < 0) {
+        this.playerPosition.x = 0;
+      }
+
+      // Did this knock the player back into a danger cell?
+      if (this.isPlayerOnDangerCell()) {
+        this.gameOver();
       }
     }
   }
@@ -263,13 +269,13 @@ export class AppState {
     this.dangerColumn++;
 
     for (let i = 0; i < 3; i++) {
-      this.grid.cells[i][this.dangerColumn].danger = true;
+      this.grid.cells[i][this.dangerColumn].outOfBounds = true;
     }
   }
 
   isPlayerOnDangerCell() {
     const playerCell = this.grid.getCellAtPosition(this.playerPosition);
-    if (playerCell.danger) {
+    if (playerCell.outOfBounds) {
       return true;
     }
   }

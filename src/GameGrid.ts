@@ -5,14 +5,30 @@ export interface GameGridProps {
   height: number;
 }
 
+export enum CellColor {
+  RED = 'red',
+  BLUE = 'blue',
+  GREEN = 'green',
+  PURPLE = 'purple',
+  ORANGE = 'orange',
+  WHITE = 'white',
+}
+
 export class GameGridCell {
-  cover = false;
+  outOfBounds = false;
   danger = false;
+  color = CellColor.WHITE;
 
   constructor() {
-    this.cover = Math.random() < 0.5;
+    // 50% chance to be a coloured cell
+    if (Math.random() < 0.5) {
+      // Be a random colour
+      const colors = Object.values(CellColor);
+      const rnd = Math.floor(Math.random() * colors.length);
+      this.color = colors[rnd];
+    }
 
-    makeObservable(this, { danger: observable });
+    makeObservable(this, { outOfBounds: observable, danger: observable });
   }
 }
 
