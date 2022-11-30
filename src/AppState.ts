@@ -97,9 +97,11 @@ export class AppState {
   generateOverseerSequence() {
     this.overseerSequence = [];
 
+    // Get actual colors used in grid, don't treat white as dangerous
+    const colors = this.grid.getGridColors().filter((color) => color !== CellColor.WHITE);
+
     for (let i = 0; i < 5; i++) {
       // Be a random colour
-      const colors = Object.values(CellColor);
       const rnd = Math.floor(Math.random() * colors.length);
       this.overseerSequence.push(colors[rnd]);
     }

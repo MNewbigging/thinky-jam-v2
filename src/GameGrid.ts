@@ -20,8 +20,8 @@ export class GameGridCell {
   color = CellColor.WHITE;
 
   constructor() {
-    // 50% chance to be a coloured cell
-    if (Math.random() < 0.5) {
+    // 80% chance to be a coloured cell
+    if (Math.random() <= 0.8) {
       // Be a random colour
       const colors = Object.values(CellColor);
       const rnd = Math.floor(Math.random() * colors.length);
@@ -69,5 +69,13 @@ export class GameGrid {
 
   getCellAtPosition(pos: GridPosition) {
     return this.cells[pos.y][pos.x];
+  }
+
+  getGridColors() {
+    const colors = new Set<CellColor>();
+
+    this.cells.forEach((row) => row.forEach((cell) => colors.add(cell.color)));
+
+    return Array.from(colors);
   }
 }
