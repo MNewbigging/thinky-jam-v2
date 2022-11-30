@@ -1,0 +1,21 @@
+.game-grid {
+  display: grid;
+  border-left: 1px solid black;
+  border-bottom: 1px solid black;
+
+  .game-grid-cell {
+    width: 40px;
+    height: 40px;
+    border-right: 1px solid black;
+    border-top: 1px solid black;
+    transition: background-color 0.2s linear;
+
+    &.cover {
+      background-color: rgb(223, 223, 223);
+    }
+
+    &.danger {
+      background-color: rgb(245, 137, 137);
+    }
+  }
+}

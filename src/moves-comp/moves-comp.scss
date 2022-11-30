@@ -1,0 +1,36 @@
+.moves-comp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 26px;
+
+  .moves-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 40px);
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+
+    .moves-grid-cell {
+      width: 40px;
+      height: 40px;
+      border-top: 1px solid black;
+      border-right: 1px solid black;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 26px;
+      user-select: none;
+      cursor: pointer;
+
+      &.focus {
+        box-shadow: inset 0 0 5px 1px blue;
+      }
+
+      &.action {
+        box-shadow: inset 0 0 5px 1px green;
+      }
+    }
+  }
+}
